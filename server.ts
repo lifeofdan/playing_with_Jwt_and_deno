@@ -1,5 +1,5 @@
 import { create, verify } from 'https://deno.land/x/djwt@v2.4/mod.ts'
-import { Application, Router } from 'https://deno.land/x/oak/mod.ts'
+import { Application, Router, send } from 'https://deno.land/x/oak/mod.ts'
 import User from './interfaces/User.ts'
 
 const key = await crypto.subtle.generateKey(
@@ -57,12 +57,17 @@ router
 
 		if (loginCredentials) {
 			const jwt = await create({alg: "HS512", type: "JWT"}, { email: loginCredentials.email, admin: loginCredentials.admin }, key)
-			const verifyPayload = await verify(jwt, key);
-			console.log('the payload is verified', verifyPayload);
-			context.response.body = jwt
+			// const verifyPayload = await verify(jwt, key);
+			// console.log('the payload is verified', verifyPayload);
+			context.cookies.set("token", jwt)
+			context.response.body = await Deno.readFile(`${Deno.cwd()}/public/test.html`);
 		} else {
 			context.response.body = "Invalid user credentials";
 		}
+	})
+	.get("/logout", async (context) => {
+		context.cookies.delete("token")
+		context.response.body = await Deno.readFile(`${Deno.cwd()}/public/index.html`);
 	});
 
 const HOST = 'localhost';

@@ -1,0 +1,12 @@
+{
+	"workbench.colorCustomizations": {
+		"activityBar.background": "#600420",
+		"titleBar.activeBackground": "#86062C",
+		"titleBar.activeForeground": "#FFFBFC"
+	},
+	"deno.enable": true,
+	"deno.lint": true,
+	"deno.suggest.imports.hosts": {
+		"https://deno.land": false
+	}
+}
